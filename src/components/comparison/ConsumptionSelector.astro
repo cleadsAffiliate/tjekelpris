@@ -1,0 +1,309 @@
+---
+import { STANDARD_ANNUAL_KWH } from '../../lib/types';
+
+interface Props {
+  defaultKwh?: number;
+}
+
+const { defaultKwh = STANDARD_ANNUAL_KWH } = Astro.props;
+
+const presets = [
+  { kwh: 2000, label: 'Lejlighed', sub: '2.000 kWh/år' },
+  { kwh: 4000, label: 'Hus', sub: '4.000 kWh/år' },
+  { kwh: 6000, label: 'Stort hus', sub: '6.000 kWh/år' },
+] as const;
+---
+
+<section class="cs-strip" data-consumption-selector aria-label="Vælg forbrug og postnummer">
+  <div class="cs-inner">
+    <div class="cs-postcode">
+      <svg
+        class="cs-icon"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M12 2C7.58 2 4 5.58 4 10c0 6 8 12 8 12s8-6 8-12c0-4.42-3.58-8-8-8z"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linejoin="round"
+        />
+        <circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.75" />
+      </svg>
+      <input
+        type="text"
+        id="cs-postcode"
+        name="postcode"
+        class="cs-postcode-input"
+        placeholder="Postnummer"
+        maxlength="4"
+        pattern="[0-9]{4}"
+        inputmode="numeric"
+        autocomplete="postal-code"
+        data-postcode-input
+        aria-label="Dit postnummer"
+      />
+    </div>
+
+    <div class="cs-divider" aria-hidden="true"></div>
+
+    <div class="cs-presets" role="radiogroup" aria-label="Boligtype">
+      {
+        presets.map((preset) => (
+          <label class="cs-preset">
+            <input
+              type="radio"
+              name="preset"
+              value={preset.kwh}
+              checked={preset.kwh === defaultKwh}
+              data-preset-input
+            />
+            <span class="cs-preset-body">
+              <span class="cs-preset-label">{preset.label}</span>
+              <span class="cs-preset-sub tabular-nums">{preset.sub}</span>
+            </span>
+          </label>
+        ))
+      }
+    </div>
+
+    <div class="cs-divider" aria-hidden="true"></div>
+
+    <div class="cs-custom">
+      <label class="cs-custom-label" for="cs-kwh">Eller</label>
+      <div class="cs-custom-field">
+        <input
+          type="number"
+          id="cs-kwh"
+          name="kwh"
+          class="cs-kwh-input tabular-nums"
+          value={defaultKwh}
+          min="500"
+          max="20000"
+          step="100"
+          inputmode="numeric"
+          data-kwh-input
+          aria-label="Årligt forbrug i kWh"
+        />
+        <span class="cs-kwh-suffix">kWh/år</span>
+      </div>
+    </div>
+  </div>
+  <p class="cs-help" data-postcode-region hidden>Valgfrit</p>
+</section>
+
+<style>
+  .cs-strip {
+    width: 100%;
+  }
+
+  .cs-inner {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 0.3125rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .cs-postcode {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    padding-left: 0.875rem;
+    min-width: 180px;
+  }
+
+  .cs-icon {
+    color: var(--color-fg-subtle);
+    flex-shrink: 0;
+  }
+
+  .cs-postcode-input {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 0.625rem;
+    font-size: 0.9375rem;
+    font-family: var(--font-sans);
+    background: transparent;
+    border: 0;
+    outline: none;
+    color: var(--color-fg);
+  }
+
+  .cs-postcode-input::placeholder {
+    color: var(--color-fg-subtle);
+  }
+
+  .cs-divider {
+    width: 1px;
+    background-color: var(--color-border);
+    margin-block: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .cs-presets {
+    display: flex;
+    flex: 1;
+    padding: 0.1875rem;
+    gap: 0.1875rem;
+    min-width: 0;
+  }
+
+  .cs-preset {
+    position: relative;
+    flex: 1;
+    cursor: pointer;
+    min-width: 0;
+  }
+
+  .cs-preset input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .cs-preset-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.0625rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 999px;
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
+    white-space: nowrap;
+    text-align: center;
+    height: 100%;
+  }
+
+  .cs-preset:hover .cs-preset-body {
+    background-color: var(--color-bg-muted);
+  }
+
+  .cs-preset input:checked + .cs-preset-body {
+    background-color: var(--color-fg);
+    color: var(--color-bg);
+  }
+
+  .cs-preset input:focus-visible + .cs-preset-body {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+
+  .cs-preset-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+
+  .cs-preset-sub {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    line-height: 1.2;
+    opacity: 0.65;
+  }
+
+  .cs-custom {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-inline: 0.875rem;
+    flex-shrink: 0;
+  }
+
+  .cs-custom-label {
+    font-size: 0.8125rem;
+    color: var(--color-fg-subtle);
+    font-weight: 500;
+  }
+
+  .cs-custom-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .cs-kwh-input {
+    width: 4.5rem;
+    padding: 0.5rem 0.625rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    background: transparent;
+    border: 0;
+    outline: none;
+    color: var(--color-fg);
+    text-align: right;
+  }
+
+  .cs-kwh-input::-webkit-outer-spin-button,
+  .cs-kwh-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .cs-kwh-input[type='number'] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+
+  .cs-kwh-suffix {
+    font-size: 0.8125rem;
+    color: var(--color-fg-subtle);
+    font-weight: 500;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cs-help {
+    margin: 0.5rem 0 0;
+    font-size: 0.75rem;
+    color: var(--color-fg-subtle);
+    text-align: center;
+  }
+
+  @media (max-width: 900px) {
+    .cs-inner {
+      flex-direction: column;
+      border-radius: var(--radius-xl);
+      padding: 0.5rem;
+      gap: 0.375rem;
+    }
+    .cs-postcode {
+      min-width: 0;
+      padding: 0.125rem 0.875rem;
+    }
+    .cs-divider {
+      display: none;
+    }
+    .cs-presets {
+      padding: 0;
+    }
+    .cs-custom {
+      justify-content: space-between;
+      padding: 0.625rem 0.875rem 0.25rem;
+      border-top: 1px dashed var(--color-border);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .cs-preset-label {
+      font-size: 0.8125rem;
+    }
+    .cs-preset-sub {
+      display: none;
+    }
+  }
+</style>

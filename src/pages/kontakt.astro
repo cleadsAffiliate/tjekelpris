@@ -1,0 +1,232 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/common/Breadcrumb.astro';
+import { SITE } from '../lib/site';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  name: 'Kontakt Tjekelpris',
+  url: new URL('/kontakt/', SITE.url).toString(),
+  mainEntity: {
+    '@type': 'Organization',
+    name: SITE.name,
+    email: SITE.email,
+  },
+};
+---
+
+<BaseLayout
+  title="Kontakt"
+  description="Kontakt Tjekelpris. Spørgsmål, fejlrapporter eller samarbejde — vi svarer typisk indenfor 1-2 hverdage."
+  canonical="/kontakt/"
+  jsonLd={jsonLd}
+>
+  <div class="kontakt-page">
+    <div class="container-narrow">
+      <Breadcrumb items={[{ label: 'Forside', href: '/' }, { label: 'Kontakt' }]} />
+
+      <header class="page-header">
+        <h1>Kontakt os</h1>
+        <p>
+          Har du et spørgsmål, fundet en fejl eller vil du samarbejde? Vi svarer typisk indenfor 1-2
+          hverdage.
+        </p>
+      </header>
+
+      <div class="kontakt-grid">
+        <form
+          class="contact-form"
+          name="kontakt"
+          method="POST"
+          action={`mailto:${SITE.email}`}
+          enctype="text/plain"
+          aria-label="Kontaktformular"
+        >
+          <div class="field">
+            <label class="label" for="name">Navn</label>
+            <input class="input" id="name" name="navn" type="text" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label class="label" for="email">E-mail</label>
+            <input
+              class="input"
+              id="email"
+              name="email"
+              type="email"
+              required
+              autocomplete="email"
+            />
+          </div>
+
+          <div class="field">
+            <label class="label" for="subject">Emne</label>
+            <select class="input" id="subject" name="emne" required>
+              <option value="">Vælg et emne</option>
+              <option value="generelt">Generelt spørgsmål</option>
+              <option value="fejl">Fejl eller prisafvigelse</option>
+              <option value="samarbejde">Samarbejde / presse</option>
+              <option value="andet">Andet</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label class="label" for="message">Besked</label>
+            <textarea
+              class="input textarea"
+              id="message"
+              name="besked"
+              rows="6"
+              required
+              minlength="10"
+              maxlength="2000"
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Send besked</button>
+        </form>
+
+        <aside class="contact-info">
+          <h2>Direkte kontakt</h2>
+          <dl>
+            <dt>E-mail</dt>
+            <dd>
+              <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+            </dd>
+            <dt>Svartid</dt>
+            <dd>1-2 hverdage</dd>
+            <dt>Sprog</dt>
+            <dd>Dansk, engelsk</dd>
+          </dl>
+
+          <div class="tip">
+            <h3>Har du fundet en prisfejl?</h3>
+            <p>
+              Priser kan ændre sig mellem opdateringer. Hvis du ser en afvigelse, så giv os gerne
+              besked med et link til selskabets prisside — så retter vi hurtigst muligt.
+            </p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .kontakt-page {
+    padding-block: 2rem 4rem;
+  }
+
+  .page-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .page-header h1 {
+    font-size: clamp(2rem, 4.5vw, 2.75rem);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    margin: 0 0 0.75rem;
+    line-height: 1.1;
+  }
+
+  .page-header p {
+    font-size: 1.0625rem;
+    color: var(--color-fg-muted);
+    line-height: 1.55;
+    margin: 0;
+    max-width: 560px;
+  }
+
+  .kontakt-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 3rem;
+    align-items: flex-start;
+  }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .contact-form .btn {
+    align-self: flex-start;
+    margin-top: 0.5rem;
+  }
+
+  .textarea {
+    resize: vertical;
+    min-height: 120px;
+    font-family: var(--font-sans);
+  }
+
+  select.input {
+    cursor: pointer;
+  }
+
+  .contact-info {
+    padding: 1.75rem;
+    background-color: var(--color-bg-subtle);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+  }
+
+  .contact-info h2 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0 0 1rem;
+    letter-spacing: -0.015em;
+  }
+
+  .contact-info dl {
+    margin: 0 0 1.5rem;
+  }
+
+  .contact-info dt {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-fg-subtle);
+    margin-bottom: 0.25rem;
+  }
+
+  .contact-info dd {
+    margin: 0 0 1rem;
+    font-size: 0.9375rem;
+    color: var(--color-fg);
+  }
+
+  .contact-info a {
+    color: var(--color-brand);
+  }
+
+  .tip {
+    padding: 1.25rem;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+
+  .tip h3 {
+    margin: 0 0 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+
+  .tip p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--color-fg-muted);
+    line-height: 1.55;
+  }
+
+  @media (max-width: 768px) {
+    .kontakt-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+</style>

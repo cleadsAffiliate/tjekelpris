@@ -1,0 +1,303 @@
+---
+import { STANDARD_ANNUAL_KWH } from '../../lib/types';
+
+interface Props {
+  defaultKwh?: number;
+  compact?: boolean;
+}
+
+const { defaultKwh = STANDARD_ANNUAL_KWH, compact = false } = Astro.props;
+---
+
+<form
+  class={`price-calculator${compact ? ' is-compact' : ''}`}
+  data-calculator
+  aria-label="Prisberegner"
+  novalidate
+>
+  <div class="field">
+    <label class="label" for="kwh-input">Årligt forbrug (kWh)</label>
+    <div class="input-group">
+      <input
+        type="number"
+        id="kwh-input"
+        name="kwh"
+        class="input"
+        value={defaultKwh}
+        min="500"
+        max="20000"
+        step="100"
+        inputmode="numeric"
+        data-kwh-input
+        aria-describedby="kwh-help"
+      />
+    </div>
+    <p id="kwh-help" class="field-help">Standardforbrug for en husstand: {STANDARD_ANNUAL_KWH} kWh/år.</p>
+  </div>
+
+  <div class="field">
+    <label class="label" for="postcode-input">Postnummer</label>
+    <input
+      type="text"
+      id="postcode-input"
+      name="postcode"
+      class="input"
+      placeholder="F.eks. 2100"
+      maxlength="4"
+      pattern="[0-9]{4}"
+      inputmode="numeric"
+      autocomplete="postal-code"
+      data-postcode-input
+      aria-describedby="postcode-help"
+    />
+    <p id="postcode-help" class="field-help" data-postcode-region>
+      Bestemmer hvilket prisområde du hører til (DK1/DK2).
+    </p>
+  </div>
+
+  <div class="range-field">
+    <label class="label" for="kwh-range">Juster forbrug</label>
+    <input
+      type="range"
+      id="kwh-range"
+      name="kwh-range"
+      min="500"
+      max="12000"
+      step="100"
+      value={defaultKwh}
+      data-kwh-range
+      aria-label="Juster årligt forbrug"
+    />
+    <div class="range-labels">
+      <span>500</span>
+      <span>12.000</span>
+    </div>
+  </div>
+</form>
+
+<style>
+  .price-calculator {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.5fr;
+    gap: 1.25rem;
+    padding: 1.5rem;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .price-calculator.is-compact {
+    padding: 1.25rem;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .field-help {
+    margin: 0.375rem 0 0;
+    font-size: 0.8125rem;
+    color: var(--color-fg-subtle);
+  }
+
+  .input-group {
+    position: relative;
+  }
+
+  .range-field {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  input[type='range'] {
+    width: 100%;
+    margin-top: 0.5rem;
+    accent-color: var(--color-brand);
+  }
+
+  .range-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.375rem;
+    font-size: 0.75rem;
+    color: var(--color-fg-subtle);
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (max-width: 768px) {
+    .price-calculator {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      padding: 1.25rem;
+    }
+  }
+</style>
+
+<script>
+  type FilterState = {
+    settlements: Set<string>;
+    noBinding: boolean;
+    green: boolean;
+    noSubscription: boolean;
+    sort: 'monthly_asc' | 'monthly_desc' | 'kwh_asc' | 'trustpilot_desc';
+  };
+
+  const calculator = document.querySelector<HTMLFormElement>('[data-calculator]');
+  const kwhInput = document.querySelector<HTMLInputElement>('[data-kwh-input]');
+  const kwhRange = document.querySelector<HTMLInputElement>('[data-kwh-range]');
+  const postcodeInput = document.querySelector<HTMLInputElement>('[data-postcode-input]');
+  const regionHelp = document.querySelector<HTMLElement>('[data-postcode-region]');
+  const table = document.querySelector<HTMLElement>('[data-price-table]');
+  const filterBar = document.querySelector<HTMLFormElement>('[data-filter-bar]');
+
+  if (calculator && table) {
+    const rows = Array.from(table.querySelectorAll<HTMLTableRowElement>('[data-row]'));
+    const tbody = rows[0]?.parentElement;
+    const emptyMessage = table.querySelector<HTMLElement>('[data-empty]');
+
+    const daNumber = new Intl.NumberFormat('da-DK', { maximumFractionDigits: 0 });
+
+    const MONTHS_PER_YEAR = 12;
+
+    function getAnnualKwh(): number {
+      if (!kwhInput) return 4000;
+      const value = parseInt(kwhInput.value, 10);
+      if (Number.isNaN(value) || value < 100) return 4000;
+      return Math.min(Math.max(value, 100), 50000);
+    }
+
+    function readFilters(): FilterState {
+      const state: FilterState = {
+        settlements: new Set(),
+        noBinding: false,
+        green: false,
+        noSubscription: false,
+        sort: 'monthly_asc',
+      };
+      if (!filterBar) {
+        state.settlements = new Set(['variabel', 'fast', 'aconto_1', 'aconto_3']);
+        return state;
+      }
+      filterBar
+        .querySelectorAll<HTMLInputElement>('input[name="settlement"]:checked')
+        .forEach((el) => state.settlements.add(el.value));
+      state.noBinding = !!filterBar.querySelector<HTMLInputElement>('input[name="no_binding"]:checked');
+      state.green = !!filterBar.querySelector<HTMLInputElement>('input[name="green"]:checked');
+      state.noSubscription = !!filterBar.querySelector<HTMLInputElement>(
+        'input[name="no_subscription"]:checked',
+      );
+      const sortEl = filterBar.querySelector<HTMLSelectElement>('select[name="sort"]');
+      if (sortEl) state.sort = sortEl.value as FilterState['sort'];
+      return state;
+    }
+
+    function passesFilters(row: HTMLTableRowElement, state: FilterState): boolean {
+      const settlement = row.dataset.settlement ?? '';
+      if (state.settlements.size > 0 && !state.settlements.has(settlement)) return false;
+      if (state.noBinding && row.dataset.binding !== '0') return false;
+      if (state.green && row.dataset.green !== 'true') return false;
+      if (state.noSubscription && row.dataset.subscription !== '0') return false;
+      return true;
+    }
+
+    function getMonthlyCost(row: HTMLTableRowElement, annualKwh: number): number {
+      const kwhPrice = parseFloat(row.dataset.kwhPrice ?? '0');
+      const subscription = parseFloat(row.dataset.subscription ?? '0');
+      return (kwhPrice * annualKwh) / MONTHS_PER_YEAR + subscription;
+    }
+
+    function updateTable() {
+      if (!tbody) return;
+      const annualKwh = getAnnualKwh();
+      const state = readFilters();
+
+      rows.forEach((row) => {
+        const monthly = getMonthlyCost(row, annualKwh);
+        row.dataset.currentMonthly = String(monthly);
+        const monthlyCell = row.querySelector<HTMLElement>('[data-monthly-display]');
+        if (monthlyCell) monthlyCell.textContent = daNumber.format(Math.round(monthly));
+      });
+
+      const visible = rows.filter((row) => passesFilters(row, state));
+
+      visible.sort((a, b) => {
+        const aMonthly = parseFloat(a.dataset.currentMonthly ?? '0');
+        const bMonthly = parseFloat(b.dataset.currentMonthly ?? '0');
+        const aKwh = parseFloat(a.dataset.kwhPrice ?? '0');
+        const bKwh = parseFloat(b.dataset.kwhPrice ?? '0');
+        switch (state.sort) {
+          case 'monthly_desc':
+            return bMonthly - aMonthly;
+          case 'kwh_asc':
+            return aKwh - bKwh;
+          case 'trustpilot_desc': {
+            const aTp = getTrustpilot(a);
+            const bTp = getTrustpilot(b);
+            return bTp - aTp;
+          }
+          case 'monthly_asc':
+          default:
+            return aMonthly - bMonthly;
+        }
+      });
+
+      rows.forEach((row) => {
+        row.hidden = true;
+      });
+      visible.forEach((row, i) => {
+        tbody.appendChild(row);
+        row.hidden = false;
+        const rankEl = row.querySelector<HTMLElement>('[data-rank]');
+        if (rankEl) rankEl.textContent = String(i + 1);
+      });
+
+      if (emptyMessage) emptyMessage.hidden = visible.length !== 0;
+    }
+
+    function getTrustpilot(row: HTMLTableRowElement): number {
+      const label = row.querySelector('[aria-label^="Trustpilot score"]')?.getAttribute('aria-label') ?? '';
+      const match = label.match(/([0-9]+[.,][0-9]+)/);
+      if (!match) return 0;
+      return parseFloat(match[1].replace(',', '.'));
+    }
+
+    function syncRange() {
+      if (!kwhInput || !kwhRange) return;
+      const value = getAnnualKwh();
+      kwhRange.value = String(Math.min(Math.max(value, Number(kwhRange.min)), Number(kwhRange.max)));
+    }
+
+    function updatePostcodeRegion() {
+      if (!postcodeInput || !regionHelp) return;
+      const raw = postcodeInput.value.trim();
+      if (!/^\d{4}$/.test(raw)) {
+        regionHelp.textContent = 'Bestemmer hvilket prisområde du hører til (DK1/DK2).';
+        return;
+      }
+      const postal = parseInt(raw, 10);
+      // Sjælland, Lolland-Falster, Møn, Bornholm → DK2 (ca. 1xxx-4999 østdanske + 37xx)
+      // Resten (Jylland, Fyn) → DK1
+      const isEast = postal >= 1000 && postal <= 4999;
+      regionHelp.textContent = isEast
+        ? 'Prisområde: DK2 (Øst Danmark).'
+        : 'Prisområde: DK1 (Jylland/Fyn).';
+    }
+
+    kwhInput?.addEventListener('input', () => {
+      syncRange();
+      updateTable();
+    });
+    kwhRange?.addEventListener('input', () => {
+      if (kwhInput && kwhRange) kwhInput.value = kwhRange.value;
+      updateTable();
+    });
+    postcodeInput?.addEventListener('input', updatePostcodeRegion);
+    filterBar?.addEventListener('change', updateTable);
+
+    updateTable();
+  }
+</script>

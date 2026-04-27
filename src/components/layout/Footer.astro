@@ -1,0 +1,217 @@
+---
+import { getCollection } from 'astro:content';
+
+const year = new Date().getFullYear();
+
+const guidePosts = (await getCollection('blog', (entry) => !entry.data.draft))
+  .sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime())
+  .slice(0, 3);
+---
+
+<footer class="site-footer">
+  <div class="container-wide footer-inner">
+    <a href="/" class="footer-logo" aria-label="Tjekelpris forside">
+      <img src="/logo.svg" alt="Tjekelpris" width="175" height="40" />
+    </a>
+
+    <nav class="footer-links" aria-label="Footer-navigation">
+      <section aria-labelledby="footer-guides">
+        <h3 id="footer-guides">Guides</h3>
+        <ul>
+          {
+            guidePosts.map((post) => (
+              <li>
+                <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section aria-labelledby="footer-info">
+        <h3 id="footer-info">Information</h3>
+        <ul>
+          <li><a href="/om-os/">Om os</a></li>
+          <li><a href="/privatlivspolitik/">Privatlivspolitik</a></li>
+          <li><a href="/saadan-tjener-vi-penge/">Sådan tjener vi penge</a></li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="footer-tools">
+        <h3 id="footer-tools">Værktøjer</h3>
+        <ul>
+          <li><a href="/elpriser-time-for-time/">Elpriser time for time</a></li>
+          <li><a href="/tjek-elregning/">Tjek din elregning</a></li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="footer-compare">
+        <h3 id="footer-compare">Sammenlign</h3>
+        <ul>
+          <li><a href="/">Sammenlign elpriser</a></li>
+        </ul>
+      </section>
+    </nav>
+
+    <p class="footer-copyright">
+      © {year} <strong>Cleads</strong> · CVR: 37180238 · E-mail:
+      <a href="mailto:info@tjekelpris.dk">info@tjekelpris.dk</a>
+    </p>
+
+    <hr class="footer-hr" />
+
+    <p class="footer-disclaimer">
+      Tjekelpris sammenligner elpriser og elselskaber for at hjælpe danske forbrugere med at træffe et
+      informeret valg. Vi bestræber os på at vise korrekte og opdaterede oplysninger, men kan ikke
+      garantere nøjagtigheden af priser, betingelser eller øvrig information. Priserne kan variere, og
+      vi opfordrer dig til altid at kontakte elselskabet direkte for at bekræfte de aktuelle vilkår.
+    </p>
+
+    <p class="footer-disclaimer">
+      Har du spørgsmål eller feedback, er du velkommen til at skrive til os på
+      <a href="mailto:info@tjekelpris.dk">info@tjekelpris.dk</a>.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: 5rem;
+    border-top: 1px solid var(--color-border);
+    background-color: var(--color-bg-subtle);
+    font-family: var(--font-sans);
+  }
+
+  .footer-inner {
+    padding-block: 3rem 2rem;
+  }
+
+  .footer-logo {
+    display: inline-block;
+    margin-bottom: 2.5rem;
+    text-decoration: none;
+  }
+
+  .footer-logo img {
+    display: block;
+    height: 40px;
+    width: auto;
+    max-width: 175px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .footer-logo img {
+      filter: invert(1) hue-rotate(180deg) brightness(1.1);
+    }
+  }
+
+  .footer-links {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .footer-links section {
+    min-width: 0;
+  }
+
+  .footer-links h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--color-fg);
+    margin: 0 0 0.875rem;
+    line-height: 1.3;
+  }
+
+  .footer-links ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .footer-links li {
+    margin: 0;
+  }
+
+  .footer-links a {
+    font-size: 0.9375rem;
+    color: var(--color-fg-muted);
+    text-decoration: none;
+    transition: color 0.15s ease;
+    line-height: 1.45;
+  }
+
+  .footer-links a:hover {
+    color: var(--color-fg);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .footer-copyright {
+    margin: 0 0 0;
+    font-size: 0.875rem;
+    color: var(--color-fg-muted);
+    line-height: 1.6;
+  }
+
+  .footer-copyright strong {
+    color: var(--color-fg);
+    font-weight: 600;
+  }
+
+  .footer-copyright a {
+    color: var(--color-fg-muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .footer-copyright a:hover {
+    color: var(--color-fg);
+  }
+
+  .footer-hr {
+    border: 0;
+    border-top: 1px solid var(--color-border);
+    margin: 1.5rem 0;
+  }
+
+  .footer-disclaimer {
+    margin: 0 0 0.875rem;
+    font-size: 0.875rem;
+    color: var(--color-fg-subtle);
+    line-height: 1.6;
+  }
+
+  .footer-disclaimer:last-child {
+    margin-bottom: 0;
+  }
+
+  .footer-disclaimer a {
+    color: var(--color-fg-muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .footer-disclaimer a:hover {
+    color: var(--color-fg);
+  }
+
+  @media (max-width: 900px) {
+    .footer-links {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem 1.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .footer-links {
+      grid-template-columns: 1fr;
+      gap: 1.75rem;
+    }
+  }
+</style>

@@ -1,0 +1,655 @@
+---
+import '../styles/global.css';
+---
+
+<html lang="da">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<link rel="preload" href="/fonts/geist-variable.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="/fonts/geist-mono-variable.woff2" as="font" type="font/woff2" crossorigin />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="generator" content={Astro.generator} />
+		<meta name="description" content="Er du træt af at betale for meget for din strøm? Find en billigere elaftale via os. Sammenlign elpriser fra mere end 40 elselskaber hos Tjekelpris.dk." />
+		<title>Sammenlign elpriser i 2026 | Få billig strøm | Tjekelpris.dk</title>
+		<script type="application/ld+json" set:html={JSON.stringify({
+			"@context": "https://schema.org",
+			"@type": "ItemList",
+			"name": "Sammenligning af elaftaler",
+			"numberOfItems": 2,
+			"itemListOrder": "https://schema.org/ItemListOrderAscending",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"item": {
+						"@type": "Product",
+						"name": "DCC Energi Flex - Intro",
+						"brand": { "@type": "Brand", "name": "DCC Energi" },
+						"offers": {
+							"@type": "Offer",
+							"price": 5560,
+							"priceCurrency": "DKK",
+							"url": "https://tjekelpris.dk/elaftale/dcc-energi-flex-intro/"
+						}
+					}
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"item": {
+						"@type": "Product",
+						"name": "DCC Energi Flex - Intro",
+						"brand": { "@type": "Brand", "name": "DCC Energi" },
+						"offers": {
+							"@type": "Offer",
+							"price": 5560,
+							"priceCurrency": "DKK",
+							"url": "https://tjekelpris.dk/elaftale/dcc-energi-flex-intro/"
+						}
+					}
+				}
+			]
+		})}></script>
+	</head>
+	<body>
+		<header class="items-center justify-center">
+			<div class="justify-between items-center">
+				<a href="/" aria-label="Tjekelpris.dk – til forsiden">
+					<img src="/logo.svg" alt="Tjekelpris.dk" />
+				</a>
+				<nav aria-label="Hovednavigation">
+					<ul>
+						<li><a href="/">Sammenlign elpriser</a></li>
+					</ul>
+				</nav>
+			</div>
+		</header>
+		<main>
+			<div>
+				<p class="last-updated">Opdateret <time datetime="2026-04-26">26/04/2026</time></p>
+				<h1>Sammenlign elpriser og find det billigste elselskab</h1>
+				<div class="filters" role="group" aria-label="Filtrer elpriser">
+					<div class="filter-field">
+						<label for="postnummer">Postnummer</label>
+						<div class="filter-input-group">
+							<input
+								type="text"
+								id="postnummer"
+								name="postnummer"
+								inputmode="numeric"
+								pattern="[0-9]{4}"
+								maxlength="4"
+								placeholder="f.eks. 2100"
+								autocomplete="postal-code"
+							/>
+						</div>
+					</div>
+					<div class="filter-field">
+						<label for="forbrug">Årligt forbrug</label>
+						<div class="filter-input-group">
+							<input
+								type="text"
+								id="forbrug"
+								name="forbrug"
+								inputmode="numeric"
+								autocomplete="off"
+								value="4.000"
+							/>
+							<span class="input-suffix" aria-hidden="true">kWh</span>
+						</div>
+					</div>
+					<div class="filter-field">
+						<label for="pristype">Pristype</label>
+						<div class="filter-input-group">
+							<select id="pristype" name="pristype">
+								<option value="">Alle</option>
+								<option value="variabel">Variabel</option>
+								<option value="fast">Fast pris</option>
+							</select>
+							<svg class="filter-chevron" viewBox="0 0 24 24" aria-hidden="true">
+								<path d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"></path>
+							</svg>
+						</div>
+					</div>
+					<div class="filter-field">
+						<label for="afregning">Afregning</label>
+						<div class="filter-input-group">
+							<select id="afregning" name="afregning">
+								<option value="">Alle</option>
+								<option value="aconto">Aconto</option>
+								<option value="forbrug">Efter forbrug</option>
+							</select>
+							<svg class="filter-chevron" viewBox="0 0 24 24" aria-hidden="true">
+								<path d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"></path>
+							</svg>
+						</div>
+					</div>
+				</div>
+				<ol aria-label="Sammenligning af elaftaler">
+					<li>
+						<details>
+							<summary class="items-center">
+								<div class="justify-between items-center">
+									<div>
+										<img src="/images/providers/dcc-energi-logo.png" alt="DCC Energi" />
+										<div class="stats-row">
+											<dl class="stat-block">
+												<dt class="stat-label">Pris pr. kWh</dt>
+												<dd class="stat-value">1,39 kr.</dd>
+											</dl>
+											<dl class="stat-block">
+												<dt class="stat-label">Abonnement</dt>
+												<dd class="stat-value">25 kr.</dd>
+											</dl>
+										</div>
+									</div>
+									<div>
+										<dl>
+											<dt class="stat-label">Estimeret pris/md.</dt>
+											<dd class="stat-value-lg">463 kr./md.</dd>
+										</dl>
+										<a class="btn-primary" href="/elaftale/dcc-energi-flex-intro/">
+											<span>Se din pris</span>
+											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+												<path d="M3.75 9H14.25M14.25 9L9 3.75M14.25 9L9 14.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+											</svg>
+										</a>
+									</div>
+								</div>
+								<svg viewBox="0 0 24 24" aria-hidden="true">
+									<path d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"></path>
+								</svg>
+							</summary>
+							<div class="deal-expanded">
+								<ul class="badges" aria-label="Egenskaber">
+									<li class="badge badge-verified">
+										<svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+											<path d="M2.5 6.25L4.75 8.5L9.5 3.75" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+										</svg>
+										Verificeret
+									</li>
+									<li class="badge badge-promo">Introtilbud</li>
+									<li class="badge">Aconto</li>
+									<li class="badge">Variabel</li>
+									<li class="badge">6 mdr. binding</li>
+								</ul>
+								<div class="breakdown-columns">
+									<div class="breakdown">
+										<h3 class="breakdown-heading">Udregning</h3>
+										<dl class="breakdown-list">
+											<dt class="breakdown-label">Rå elpris (spot)</dt>
+											<dd class="breakdown-value">0,9063 kr.</dd>
+											<dt class="breakdown-label">Elselskabet</dt>
+											<dd class="breakdown-value">0,0074 kr.</dd>
+											<dt class="breakdown-label">Netselskab (N1)</dt>
+											<dd class="breakdown-value">0,2793 kr.</dd>
+											<dt class="breakdown-label">Energinet</dt>
+											<dd class="breakdown-value">0,1905 kr.</dd>
+											<dt class="breakdown-label">Elafgift</dt>
+											<dd class="breakdown-value">0,0100 kr.</dd>
+											<dt class="breakdown-label breakdown-total">Total inkl. moms</dt>
+											<dd class="breakdown-value breakdown-total">1,39 kr.</dd>
+										</dl>
+									</div>
+									<div class="breakdown">
+										<h3 class="breakdown-heading">Betalingsgebyrer</h3>
+										<dl class="breakdown-list">
+											<dt class="breakdown-label">Betalingskort</dt>
+											<dd class="breakdown-value">0,00 kr.</dd>
+											<dt class="breakdown-label">MobilePay</dt>
+											<dd class="breakdown-value">10,00 kr.</dd>
+											<dt class="breakdown-label">Betalingsservice</dt>
+											<dd class="breakdown-value">9,95 kr.</dd>
+										</dl>
+									</div>
+								</div>
+								<dl class="summary-callout">
+									<dt class="summary-callout-label">
+										Estimeret pris, 4.000 kWh
+										<small>Inkl. alle afgifter, abonnement og billigste betalingsgebyr</small>
+									</dt>
+									<dd class="summary-callout-value">5.560 kr./år</dd>
+								</dl>
+							</div>
+						</details>
+					</li>
+					<li>
+						<details>
+							<summary class="items-center">
+								<div class="justify-between items-center">
+									<div>
+										<img src="/images/providers/dcc-energi-logo.png" alt="DCC Energi" />
+										<div class="stats-row">
+											<dl class="stat-block">
+												<dt class="stat-label">Pris pr. kWh</dt>
+												<dd class="stat-value">1,39 kr.</dd>
+											</dl>
+											<dl class="stat-block">
+												<dt class="stat-label">Abonnement</dt>
+												<dd class="stat-value">25 kr.</dd>
+											</dl>
+										</div>
+									</div>
+									<div>
+										<dl>
+											<dt class="stat-label">Estimeret pris/md.</dt>
+											<dd class="stat-value-lg">463 kr./md.</dd>
+										</dl>
+										<a class="btn-primary" href="/elaftale/dcc-energi-flex-intro/">
+											<span>Se din pris</span>
+											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+												<path d="M3.75 9H14.25M14.25 9L9 3.75M14.25 9L9 14.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+											</svg>
+										</a>
+									</div>
+								</div>
+								<svg viewBox="0 0 24 24" aria-hidden="true">
+									<path d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"></path>
+								</svg>
+							</summary>
+							<div class="deal-expanded">
+								<ul class="badges" aria-label="Egenskaber">
+									<li class="badge badge-verified">
+										<svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+											<path d="M2.5 6.25L4.75 8.5L9.5 3.75" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+										</svg>
+										Verificeret
+									</li>
+									<li class="badge badge-promo">Introtilbud</li>
+									<li class="badge">Aconto</li>
+									<li class="badge">Variabel</li>
+									<li class="badge">6 mdr. binding</li>
+								</ul>
+								<div class="breakdown-columns">
+									<div class="breakdown">
+										<h3 class="breakdown-heading">Udregning</h3>
+										<dl class="breakdown-list">
+											<dt class="breakdown-label">Rå elpris (spot)</dt>
+											<dd class="breakdown-value">0,9063 kr.</dd>
+											<dt class="breakdown-label">Elselskabet</dt>
+											<dd class="breakdown-value">0,0074 kr.</dd>
+											<dt class="breakdown-label">Netselskab (N1)</dt>
+											<dd class="breakdown-value">0,2793 kr.</dd>
+											<dt class="breakdown-label">Energinet</dt>
+											<dd class="breakdown-value">0,1905 kr.</dd>
+											<dt class="breakdown-label">Elafgift</dt>
+											<dd class="breakdown-value">0,0100 kr.</dd>
+											<dt class="breakdown-label breakdown-total">Total inkl. moms</dt>
+											<dd class="breakdown-value breakdown-total">1,39 kr.</dd>
+										</dl>
+									</div>
+									<div class="breakdown">
+										<h3 class="breakdown-heading">Betalingsgebyrer</h3>
+										<dl class="breakdown-list">
+											<dt class="breakdown-label">Betalingskort</dt>
+											<dd class="breakdown-value">0,00 kr.</dd>
+											<dt class="breakdown-label">MobilePay</dt>
+											<dd class="breakdown-value">10,00 kr.</dd>
+											<dt class="breakdown-label">Betalingsservice</dt>
+											<dd class="breakdown-value">9,95 kr.</dd>
+										</dl>
+									</div>
+								</div>
+								<dl class="summary-callout">
+									<dt class="summary-callout-label">
+										Estimeret pris, 4.000 kWh
+										<small>Inkl. alle afgifter, abonnement og billigste betalingsgebyr</small>
+									</dt>
+									<dd class="summary-callout-value">5.560 kr./år</dd>
+								</dl>
+							</div>
+						</details>
+					</li>
+				</ol>
+			</div>
+		</main>
+		<footer></footer>
+		<script>
+			(() => {
+				const forbrug = document.getElementById('forbrug');
+				if (!forbrug) return;
+
+				const formatter = new Intl.NumberFormat('da-DK');
+
+				function format(value) {
+					const raw = value.replace(/\D/g, '');
+					if (raw === '') return '';
+					return formatter.format(parseInt(raw, 10));
+				}
+
+				forbrug.addEventListener('input', (event) => {
+					const target = event.target;
+					const before = target.value;
+					const cursor = target.selectionStart ?? before.length;
+					const digitsBeforeCursor = before.slice(0, cursor).replace(/\D/g, '').length;
+
+					const formatted = format(before);
+					target.value = formatted;
+
+					let newCursor = 0;
+					let seen = 0;
+					for (let i = 0; i < formatted.length && seen < digitsBeforeCursor; i++) {
+						if (/\d/.test(formatted[i])) seen++;
+						newCursor = i + 1;
+					}
+					target.setSelectionRange(newCursor, newCursor);
+				});
+
+				forbrug.addEventListener('blur', () => {
+					forbrug.value = format(forbrug.value);
+				});
+			})();
+		</script>
+	</body>
+</html>
+
+<style>
+	header,
+	footer {
+		background-color: #ffffff;
+	}
+
+	header {
+		display: flex;
+		height: 60px;
+	}
+
+	header > div {
+		display: flex;
+		width: 100%;
+		max-width: 1024px;
+	}
+
+	header nav ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		gap: 1.5rem;
+	}
+
+	header img {
+		height: 40px;
+		width: 140px;
+		object-fit: contain;
+		object-position: left center;
+		aspect-ratio: auto 140 / 40;
+		display: block;
+	}
+
+	main {
+		padding: 0.75rem;
+		background-color: #f8faf9;
+		border-top: 1px solid #e5e7eb;
+		border-bottom: 1px solid #e5e7eb;
+	}
+
+	main > div {
+		max-width: 1024px;
+		margin-inline: auto;
+	}
+
+	main h1 {
+		margin: 0 0 24px;
+		line-height: 1.4;
+		font-weight: 500;
+		font-size: clamp(1.375rem, 0.9063rem + 1.5vw, 1.75rem);
+		color: #1a1a1a;
+	}
+
+	.filters {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 1rem;
+		margin-bottom: 16px;
+	}
+
+	.filter-field {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		min-width: 0;
+	}
+
+	.filter-field label {
+		font-size: 12px;
+		font-weight: 500;
+		color: #6b7280;
+		text-transform: uppercase;
+		letter-spacing: 0.02em;
+	}
+
+	.filter-input-group {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		min-width: 0;
+		position: relative;
+	}
+
+	.filter-input-group input,
+	.filter-input-group select {
+		flex: 1;
+		min-width: 0;
+		padding: 8px 12px;
+		border: 1px solid #d1d5db;
+		border-radius: 4px;
+		font: inherit;
+		font-size: 16px;
+		color: #1a1a1a;
+		background: #ffffff;
+		transition: border-color 0.15s ease;
+	}
+
+	.filter-input-group input:focus-visible,
+	.filter-input-group select:focus-visible {
+		outline: none;
+		border-color: #1a1a1a;
+		box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.08);
+	}
+
+	.filter-input-group select {
+		appearance: none;
+		-webkit-appearance: none;
+		padding-right: 36px;
+		cursor: pointer;
+	}
+
+	.filter-chevron {
+		position: absolute;
+		right: 10px;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 1.25rem;
+		height: 1.25rem;
+		color: rgb(143, 143, 143);
+		fill: currentcolor;
+		pointer-events: none;
+	}
+
+	.input-suffix {
+		position: absolute;
+		right: 12px;
+		top: 50%;
+		transform: translateY(-50%);
+		font-size: 14px;
+		font-weight: 500;
+		color: #6b7280;
+		white-space: nowrap;
+		pointer-events: none;
+	}
+
+	#forbrug {
+		padding-right: 50px;
+	}
+
+	@media (max-width: 640px) {
+		.filters {
+			grid-template-columns: 1fr;
+		}
+
+		.filter-field label {
+			font-size: 10px;
+		}
+	}
+
+	main ol {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	main ol > li:not(:last-child) {
+		margin-bottom: 0.75rem;
+	}
+
+	main details {
+		background: #ffffff;
+		border: 1px solid #e5e7eb;
+		border-radius: 4px;
+	}
+
+	main summary {
+		display: flex;
+		list-style: none;
+		cursor: pointer;
+		padding: 12px 16px;
+	}
+
+	main summary::-webkit-details-marker {
+		display: none;
+	}
+
+	main summary > div {
+		display: flex;
+		width: 100%;
+	}
+
+	main summary > div > div {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: normal;
+	}
+
+	@media (max-width: 640px) {
+		main summary {
+			display: grid;
+			grid-template-columns: 1fr auto auto;
+			grid-template-areas:
+				"logo   price   price"
+				"stats  button  chevron";
+			column-gap: 12px;
+			row-gap: 8px;
+			align-items: center;
+		}
+
+		main summary > div,
+		main summary > div > div {
+			display: contents;
+		}
+
+		main summary img {
+			grid-area: logo;
+			justify-self: start;
+		}
+
+		main summary .stats-row {
+			grid-area: stats;
+		}
+
+		main summary > div > div:last-child > dl {
+			grid-area: price;
+			margin: 0;
+			text-align: right;
+		}
+
+		main summary .btn-primary {
+			grid-area: button;
+			margin-left: 0;
+			justify-self: end;
+		}
+
+		main summary > svg {
+			grid-area: chevron;
+			margin-left: 0;
+			justify-self: center;
+		}
+
+		main .stats-row > .stat-block:first-child {
+			margin-left: 0;
+		}
+	}
+
+	main summary img {
+		object-fit: contain;
+		width: 120px;
+		height: 50px;
+		display: block;
+		vertical-align: middle;
+	}
+
+	@media (max-width: 640px) {
+		main summary img {
+			width: 104px;
+			height: 34px;
+			object-position: left center;
+		}
+	}
+
+	main summary > svg {
+		user-select: none;
+		width: 1.5rem;
+		height: 1.5rem;
+		display: inline-block;
+		fill: currentcolor;
+		flex-shrink: 0;
+		margin-left: 1rem;
+		color: rgb(143, 143, 143);
+		transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	main details[open] summary > svg {
+		transform: rotate(180deg);
+	}
+
+	@media (max-width: 640px) {
+		main summary > svg {
+			margin-left: 0;
+		}
+	}
+
+	footer {
+		padding-top: 24px;
+		padding-bottom: 24px;
+	}
+
+	.last-updated {
+		margin-bottom: 0;
+		font-size: 14px;
+	}
+
+	.last-updated::before {
+		content: "";
+		display: inline-block;
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background-color: #e9f45c;
+		margin-right: 6px;
+		vertical-align: middle;
+		animation: pulse-subtle 2s infinite;
+		margin-top: -3px;
+	}
+
+	@keyframes pulse-subtle {
+		0% {
+			box-shadow: 0 0 0 0 rgba(233, 244, 92, 0.4);
+		}
+		100% {
+			box-shadow: 0 0 0 6px rgba(233, 244, 92, 0);
+		}
+	}
+</style>

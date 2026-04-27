@@ -1,0 +1,132 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/common/Breadcrumb.astro';
+import { SITE } from '../lib/site';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: SITE.name,
+  url: SITE.url,
+  description: SITE.description,
+  foundingDate: '2026',
+  areaServed: 'DK',
+  contactPoint: {
+    '@type': 'ContactPoint',
+    email: SITE.email,
+    contactType: 'customer service',
+  },
+};
+---
+
+<BaseLayout
+  title="Om Tjekelpris"
+  description="Tjekelpris.dk er Danmarks uafhængige elsammenligningstjeneste. Vi er ikke ejet af et elselskab og tjener penge på affiliate-provision — aldrig på skjulte placeringer."
+  canonical="/om-os/"
+  jsonLd={jsonLd}
+>
+  <div class="om-os">
+    <div class="container-narrow">
+      <Breadcrumb items={[{ label: 'Forside', href: '/' }, { label: 'Om os' }]} />
+
+      <article class="prose">
+        <header class="page-header">
+          <h1>Om Tjekelpris</h1>
+          <p class="lead">
+            Tjekelpris.dk er en uafhængig sammenligningstjeneste. Vores mål er at gøre det nemmere for
+            danske forbrugere at navigere i elmarkedet.
+          </p>
+        </header>
+
+        <h2>Hvad vi tilbyder</h2>
+        <p>
+          Vi samler priser og vilkår fra alle store elselskaber i Danmark og præsenterer dem i en enkel,
+          sammenlignelig form. Du kan justere dit årlige forbrug og se de reelle estimerede omkostninger
+          for hver aftale.
+        </p>
+
+        <h2>Uafhængighed</h2>
+        <p>
+          Vi er hverken ejet af eller tilknyttet et elselskab. Vi rangerer aftaler efter pris og relevans —
+          ikke efter hvem der betaler os mest. Når du klikker videre til en leverandør og tegner en aftale,
+          kan vi modtage en provision. Det er sådan, vi holder tjenesten gratis for dig.
+        </p>
+
+        <h2>Vores data</h2>
+        <p>
+          Priserne på Tjekelpris.dk opdateres løbende. Vi baserer spotpriser på 30-dages gennemsnit fra
+          <strong>Nord Pool</strong>, og vi kontrollerer abonnement og påslag direkte hos leverandørerne.
+          Hvis du finder en fejl, er vi meget taknemmelige for at få besked på
+          <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+        </p>
+
+        <h2>Redaktion</h2>
+        <p>
+          Redaktionen består af journalister og energieksperter med fokus på transparens og
+          forbrugerbeskyttelse. Alle artikler er skrevet af mennesker, ikke AI, og vi angiver tydeligt
+          når noget indhold er sponsoreret eller redaktionelt.
+        </p>
+
+        <h2>Har du spørgsmål?</h2>
+        <p>
+          Skriv til os på <a href={`mailto:${SITE.email}`}>{SITE.email}</a>, eller besøg vores
+          <a href="/kontakt/">kontaktside</a>. Vi svarer typisk indenfor 1-2 hverdage.
+        </p>
+      </article>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .om-os {
+    padding-block: 2rem 4rem;
+  }
+
+  .page-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .page-header h1 {
+    font-size: clamp(2rem, 4.5vw, 2.75rem);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    margin: 0 0 0.875rem;
+    line-height: 1.1;
+  }
+
+  .lead {
+    font-size: 1.15rem;
+    line-height: 1.55;
+    color: var(--color-fg-muted);
+    margin: 0;
+  }
+
+  .prose h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 2.25rem 0 0.75rem;
+    line-height: 1.2;
+  }
+
+  .prose p {
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--color-fg);
+    margin: 0 0 1.125rem;
+  }
+
+  .prose a {
+    color: var(--color-brand);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .prose a:hover {
+    color: var(--color-brand-hover);
+  }
+
+  .prose strong {
+    font-weight: 600;
+  }
+</style>

@@ -1,0 +1,664 @@
+---
+import ProviderLogo from '../common/ProviderLogo.astro';
+import { formatInteger, formatPrice } from '../../lib/format';
+import { STANDARD_ANNUAL_KWH, PRICE_TYPE_LABELS, SETTLEMENT_LABELS } from '../../lib/types';
+import type { ProductWithProvider } from '../../lib/types';
+
+interface Props {
+  products: ProductWithProvider[];
+  annualKwh?: number;
+  priceDate?: string;
+}
+
+const { products, annualKwh = STANDARD_ANNUAL_KWH, priceDate = '24. april 2026' } = Astro.props;
+
+function yearlyBreakdown(
+  kwhPrice: number,
+  subscription: number,
+  introOffer: number,
+  kwh: number,
+) {
+  const power = kwhPrice * kwh;
+  const sub = subscription * 12;
+  const total = Math.max(0, power + sub - introOffer);
+  return { power, sub, total };
+}
+---
+
+<ul class="rl-list" data-result-list aria-live="polite">
+  {
+    products.map((p, i) => {
+      const breakdown = yearlyBreakdown(
+        p.estimated_kwh_price,
+        p.subscription_fee,
+        p.intro_offer_kr,
+        annualKwh,
+      );
+      const bindingLabel =
+        p.binding_months === 0 ? 'Ingen binding' : `${p.binding_months} mdr. binding`;
+      return (
+        <li
+          data-row
+          data-rank={i + 1}
+          data-settlement={p.settlement_type}
+          data-price-type={p.price_type}
+          data-green={String(p.green_energy)}
+          data-binding={String(p.binding_months)}
+          data-subscription={p.subscription_fee}
+          data-kwh-price={p.estimated_kwh_price}
+          data-spot-premium={p.spot_premium}
+          data-intro={p.intro_offer_kr}
+          data-trustpilot={p.provider.trustpilot_score}
+          data-monthly={p.estimated_monthly}
+        >
+          <article class="rl-card" aria-labelledby={`rl-title-${i + 1}`}>
+            <header class="rl-summary">
+              <div class="rl-summary-left">
+                <ProviderLogo name={p.provider.name} size={48} />
+                <div class="rl-col rl-col-brand">
+                  <span class="rl-label">Udbyder</span>
+                  <h3 class="rl-brand-heading" id={`rl-title-${i + 1}`}>
+                    <span class="rl-brand-product">{p.product_name}</span>
+                    <span class="rl-brand-provider">{p.provider.name}</span>
+                  </h3>
+                </div>
+                <div class="rl-col">
+                  <span class="rl-label">Spotpris</span>
+                  <span class="rl-value tabular-nums">
+                    {formatPrice(p.spot_premium)}<span class="rl-suffix">øre/kWh</span>
+                  </span>
+                </div>
+              </div>
+
+              <div class="rl-summary-right">
+                <div class="rl-col rl-col-rate">
+                  <span class="rl-label">Anslået pris</span>
+                  <strong class="rl-rate tabular-nums" data-monthly-display>
+                    {formatInteger(p.estimated_monthly)}<span class="rl-rate-suffix">kr./md.</span>
+                  </strong>
+                </div>
+
+                <a
+                  class="rl-cta"
+                  href={p.provider.website_url}
+                  rel="sponsored nofollow noopener"
+                  target="_blank"
+                  data-cta
+                  aria-label={`Gå til ${p.provider.name}`}
+                >
+                  <span>Gå til udbyder</span>
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path
+                      d="M3.75 9H14.25M14.25 9L9 3.75M14.25 9L9 14.25"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </a>
+
+                <button
+                  type="button"
+                  class="rl-chevron"
+                  data-toggle
+                  aria-expanded="false"
+                  aria-controls={`rl-details-${i + 1}`}
+                  aria-label="Vis detaljer"
+                >
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z" />
+                  </svg>
+                </button>
+              </div>
+            </header>
+
+            <section class="rl-details" id={`rl-details-${i + 1}`} data-details hidden aria-label="Prisoplysninger og vilkår">
+              <div class="rl-details-inner">
+                <div class="rl-details-col">
+                  <dl class="rl-breakdown">
+                    <div class="rl-breakdown-row">
+                      <dt>
+                        Strøm{' '}
+                        <span class="rl-breakdown-meta tabular-nums" data-breakdown-power-meta>
+                          ({formatInteger(annualKwh)} kWh × {formatPrice(p.estimated_kwh_price)} kr.)
+                        </span>
+                      </dt>
+                      <dd class="tabular-nums" data-breakdown-power>
+                        {formatInteger(breakdown.power)} kr.
+                      </dd>
+                    </div>
+                    <div class="rl-breakdown-row">
+                      <dt>
+                        Abonnement{' '}
+                        <span class="rl-breakdown-meta tabular-nums">
+                          ({formatInteger(p.subscription_fee)} kr. × 12 md.)
+                        </span>
+                      </dt>
+                      <dd class="tabular-nums">{formatInteger(breakdown.sub)} kr.</dd>
+                    </div>
+                    {p.intro_offer_kr > 0 && (
+                      <div class="rl-breakdown-row rl-breakdown-discount">
+                        <dt>Introtilbud</dt>
+                        <dd class="tabular-nums">−{formatInteger(p.intro_offer_kr)} kr.</dd>
+                      </div>
+                    )}
+                    <div class="rl-breakdown-row rl-breakdown-total">
+                      <dt>Anslået årspris</dt>
+                      <dd class="tabular-nums" data-breakdown-total>
+                        {formatInteger(breakdown.total)} kr.
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+
+                <div class="rl-details-col">
+                  <dl class="rl-facts">
+                    <div>
+                      <dt>Pristype</dt>
+                      <dd>{PRICE_TYPE_LABELS[p.price_type]}</dd>
+                    </div>
+                    <div>
+                      <dt>Afregning</dt>
+                      <dd>{SETTLEMENT_LABELS[p.settlement_type]}</dd>
+                    </div>
+                    <div>
+                      <dt>Binding</dt>
+                      <dd>{bindingLabel}</dd>
+                    </div>
+                    <div>
+                      <dt>Grøn strøm</dt>
+                      <dd>{p.green_energy ? 'Ja' : 'Nej'}</dd>
+                    </div>
+                    <div>
+                      <dt>Trustpilot</dt>
+                      <dd class="tabular-nums">
+                        {p.provider.trustpilot_score.toFixed(1).replace('.', ',')} / 5
+                      </dd>
+                    </div>
+                  </dl>
+                  {p.features.length > 0 && (
+                    <ul class="rl-features">
+                      {p.features.map((feature) => (
+                        <li>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path
+                              d="M5 12l5 5L20 7"
+                              stroke="currentColor"
+                              stroke-width="2.5"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </svg>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
+
+              <footer class="rl-details-footer">
+                <p class="rl-date">Priserne er senest hentet d. {priceDate}.</p>
+                <a
+                  class="rl-cta rl-cta-small"
+                  href={p.provider.website_url}
+                  rel="sponsored nofollow noopener"
+                  target="_blank"
+                >
+                  <span>Gå til udbyder</span>
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path
+                      d="M3.75 9H14.25M14.25 9L9 3.75M14.25 9L9 14.25"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </a>
+              </footer>
+            </section>
+          </article>
+        </li>
+      );
+    })
+  }
+</ul>
+
+<p class="rl-empty" hidden data-empty>
+  Ingen aftaler matcher dine filtre.{' '}
+  <button type="button" class="rl-empty-clear" data-empty-clear>
+    Ryd filtre
+  </button>
+</p>
+
+<style>
+  .rl-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .rl-list > li {
+    margin: 0;
+    padding: 0;
+  }
+
+  .rl-card {
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    margin-bottom: 0.75rem;
+    transition: border-color 0.15s ease;
+  }
+
+  .rl-card:hover {
+    border-color: var(--color-border-strong);
+  }
+
+  .rl-card[data-expanded='true'] {
+    border-color: var(--color-fg);
+  }
+
+  .rl-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .rl-summary-left {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .rl-summary-left > :global(.provider-logo) {
+    flex-shrink: 0;
+  }
+
+  .rl-summary-right {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-shrink: 0;
+  }
+
+  .rl-col {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .rl-col-brand {
+    margin-left: 1.75rem;
+    flex: 0 0 auto;
+    min-width: 150px;
+  }
+
+  .rl-summary-left .rl-col:not(.rl-col-brand) {
+    margin-left: 2.25rem;
+  }
+
+  .rl-label {
+    display: block;
+    margin: 0 0 5px;
+    font-size: 0.75rem;
+    line-height: 0.875rem;
+    font-weight: 600;
+    color: var(--color-fg-subtle);
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+  }
+
+  .rl-value {
+    display: block;
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.3;
+    font-weight: 500;
+    color: var(--color-fg);
+  }
+
+  .rl-brand-heading {
+    margin: 0;
+    font-size: inherit;
+    font-weight: inherit;
+    letter-spacing: 0;
+    line-height: 1.25;
+  }
+
+  .rl-brand-product {
+    display: block;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-fg);
+    line-height: 1.25;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 200px;
+  }
+
+  .rl-brand-provider {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    color: var(--color-fg-muted);
+    line-height: 1.25;
+    margin-top: 1px;
+  }
+
+  .rl-suffix {
+    margin-left: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--color-fg-subtle);
+  }
+
+  .rl-col-rate {
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  .rl-rate {
+    display: block;
+    margin: 0;
+    font-size: 1.125rem;
+    line-height: 1.25;
+    font-weight: 600;
+    color: var(--color-fg);
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .rl-rate-suffix {
+    margin-left: 0.125rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-fg-muted);
+    letter-spacing: 0;
+  }
+
+  .rl-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 7px 14px;
+    margin-left: 1.5rem;
+    background-color: var(--color-brand);
+    color: var(--color-brand-fg);
+    font-weight: 600;
+    font-size: 0.875rem;
+    line-height: 1.25;
+    border-radius: 999px;
+    text-decoration: none;
+    border: 0;
+    white-space: nowrap;
+    transition:
+      background-color 0.15s ease,
+      transform 0.1s ease;
+  }
+
+  .rl-cta:hover {
+    background-color: var(--color-brand-hover);
+    color: var(--color-brand-fg);
+    transform: translateY(-1px);
+  }
+
+  .rl-cta:active {
+    transform: translateY(0);
+  }
+
+  .rl-cta-small {
+    padding: 6px 12px;
+    font-size: 0.8125rem;
+  }
+
+  .rl-chevron {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 1rem;
+    background: transparent;
+    border: 0;
+    padding: 2px;
+    color: var(--color-fg-muted);
+    cursor: pointer;
+    transition:
+      transform 0.2s ease,
+      color 0.15s ease;
+  }
+
+  .rl-chevron:hover {
+    color: var(--color-fg);
+  }
+
+  .rl-chevron[aria-expanded='true'] svg {
+    transform: rotate(180deg);
+  }
+
+  .rl-chevron svg {
+    transition: transform 0.2s ease;
+  }
+
+  .rl-details {
+    border-top: 1px solid var(--color-border);
+    padding: 1.125rem 1.25rem 1rem;
+    background-color: var(--color-bg-subtle);
+    border-bottom-left-radius: var(--radius-xl);
+    border-bottom-right-radius: var(--radius-xl);
+  }
+
+  .rl-details-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .rl-details-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-width: 0;
+  }
+
+  .rl-breakdown {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .rl-breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    font-size: 0.9375rem;
+    color: var(--color-fg);
+  }
+
+  .rl-breakdown-row dt {
+    color: var(--color-fg-muted);
+    font-weight: 400;
+  }
+
+  .rl-breakdown-row dd {
+    margin: 0;
+    font-weight: 500;
+    color: var(--color-fg);
+  }
+
+  .rl-breakdown-meta {
+    font-size: 0.8125rem;
+    color: var(--color-fg-subtle);
+  }
+
+  .rl-breakdown-discount dd {
+    color: var(--color-success);
+  }
+
+  .rl-breakdown-total {
+    border-top: 1px solid var(--color-border);
+    padding-top: 0.625rem;
+    margin-top: 0.25rem;
+  }
+
+  .rl-breakdown-total dt,
+  .rl-breakdown-total dd {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-fg);
+  }
+
+  .rl-facts {
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.625rem 1rem;
+  }
+
+  .rl-facts > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  .rl-facts dt {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-fg-subtle);
+  }
+
+  .rl-facts dd {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-fg);
+  }
+
+  .rl-features {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem 0.875rem;
+  }
+
+  .rl-features li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.8125rem;
+    color: var(--color-fg-muted);
+  }
+
+  .rl-features svg {
+    color: var(--color-success);
+    flex-shrink: 0;
+  }
+
+  .rl-details-footer {
+    margin-top: 1rem;
+    padding-top: 0.875rem;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .rl-date {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--color-fg-subtle);
+  }
+
+  .rl-details-footer .rl-cta {
+    margin-left: 0;
+  }
+
+  .rl-empty {
+    padding: 4rem 1.5rem;
+    text-align: center;
+    color: var(--color-fg-muted);
+    margin: 0;
+  }
+
+  .rl-empty-clear {
+    background: transparent;
+    border: 0;
+    color: var(--color-brand);
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0;
+    font-size: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  @media (max-width: 960px) {
+    .rl-col-brand {
+      margin-left: 1rem;
+      min-width: 0;
+      flex: 1;
+    }
+    .rl-summary-left .rl-col:not(.rl-col-brand) {
+      display: none;
+    }
+    .rl-summary-right {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .rl-summary {
+      flex-wrap: wrap;
+      padding: 0.875rem 0.875rem;
+      row-gap: 0.75rem;
+    }
+    .rl-summary-left {
+      width: 100%;
+    }
+    .rl-summary-right {
+      width: 100%;
+      justify-content: space-between;
+    }
+    .rl-col-rate {
+      align-items: flex-start;
+      text-align: left;
+    }
+    .rl-col-rate .rl-label {
+      font-size: 0.625rem;
+    }
+    .rl-cta {
+      margin-left: auto;
+      padding: 8px 14px;
+    }
+    .rl-chevron {
+      margin-left: 0.5rem;
+    }
+    .rl-details-inner {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+    .rl-brand-product {
+      max-width: none;
+    }
+  }
+</style>

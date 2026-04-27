@@ -1,0 +1,232 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumb from '../components/common/Breadcrumb.astro';
+import { formatDateDa } from '../lib/format';
+import { SITE } from '../lib/site';
+
+interface Props {
+  title: string;
+  description: string;
+  publishDate: Date;
+  updatedDate?: Date;
+  author: string;
+  tags: string[];
+  readTime?: number;
+  slug: string;
+}
+
+const { title, description, publishDate, updatedDate, author, tags, readTime, slug } = Astro.props;
+const canonical = `/blog/${slug}/`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description,
+  datePublished: publishDate.toISOString(),
+  dateModified: (updatedDate ?? publishDate).toISOString(),
+  author: {
+    '@type': 'Organization',
+    name: author,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: SITE.name,
+    url: SITE.url,
+  },
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': new URL(canonical, SITE.url).toString(),
+  },
+  keywords: tags.join(', '),
+  inLanguage: 'da-DK',
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={canonical}
+  type="article"
+  publishedTime={publishDate.toISOString()}
+  modifiedTime={(updatedDate ?? publishDate).toISOString()}
+  jsonLd={jsonLd}
+>
+  <article class="article-page">
+    <div class="container-narrow">
+      <Breadcrumb
+        items={[
+          { label: 'Forside', href: '/' },
+          { label: 'Blog', href: '/blog/' },
+          { label: title },
+        ]}
+      />
+
+      <header class="article-header">
+        <div class="meta">
+          <time datetime={publishDate.toISOString()}>{formatDateDa(publishDate)}</time>
+          {readTime && <span class="sep">·</span>}
+          {readTime && <span>{readTime} min læsning</span>}
+        </div>
+        <h1>{title}</h1>
+        <p class="lead">{description}</p>
+        {
+          tags.length > 0 && (
+            <ul class="article-tags">
+              {tags.map((tag) => (
+                <li class="tag">{tag}</li>
+              ))}
+            </ul>
+          )
+        }
+      </header>
+
+      <div class="prose">
+        <slot />
+      </div>
+
+      <footer class="article-footer">
+        <p class="author">Skrevet af <strong>{author}</strong></p>
+        {
+          updatedDate && (
+            <p class="updated">
+              Opdateret <time datetime={updatedDate.toISOString()}>{formatDateDa(updatedDate)}</time>
+            </p>
+          )
+        }
+      </footer>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .article-page {
+    padding-block: 2rem 4rem;
+  }
+
+  .article-header {
+    margin-bottom: 3rem;
+  }
+
+  .meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-fg-subtle);
+    margin-bottom: 0.875rem;
+  }
+
+  .meta time {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sep {
+    color: var(--color-fg-subtle);
+  }
+
+  .article-header h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    margin: 0 0 1rem;
+  }
+
+  .lead {
+    font-size: 1.15rem;
+    line-height: 1.55;
+    color: var(--color-fg-muted);
+    margin: 0 0 1.5rem;
+  }
+
+  .article-tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .prose :global(h2) {
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 2.5rem 0 1rem;
+    line-height: 1.2;
+  }
+
+  .prose :global(h3) {
+    font-size: 1.375rem;
+    font-weight: 600;
+    margin: 2rem 0 0.75rem;
+    line-height: 1.3;
+  }
+
+  .prose :global(p) {
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--color-fg);
+    margin: 0 0 1.25rem;
+  }
+
+  .prose :global(ul),
+  .prose :global(ol) {
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    margin: 0 0 1.25rem;
+    padding-left: 1.5rem;
+  }
+
+  .prose :global(li) {
+    margin-bottom: 0.5rem;
+  }
+
+  .prose :global(blockquote) {
+    border-left: 3px solid var(--color-brand);
+    padding: 0.5rem 0 0.5rem 1.25rem;
+    margin: 1.5rem 0;
+    color: var(--color-fg-muted);
+    font-style: italic;
+  }
+
+  .prose :global(blockquote p) {
+    margin: 0;
+  }
+
+  .prose :global(strong) {
+    font-weight: 600;
+    color: var(--color-fg);
+  }
+
+  .prose :global(a) {
+    color: var(--color-brand);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .prose :global(a:hover) {
+    color: var(--color-brand-hover);
+  }
+
+  .prose :global(code) {
+    background-color: var(--color-bg-muted);
+    padding: 0.125rem 0.375rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9em;
+  }
+
+  .article-footer {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .author,
+  .updated {
+    margin: 0 0 0.25rem;
+    font-size: 0.875rem;
+    color: var(--color-fg-muted);
+  }
+</style>
