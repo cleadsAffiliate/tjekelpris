@@ -15,40 +15,51 @@ import '../styles/global.css';
 		<title>Sammenlign elpriser i 2026 | Få billig strøm | Tjekelpris.dk</title>
 		<script type="application/ld+json" set:html={JSON.stringify({
 			"@context": "https://schema.org",
-			"@type": "ItemList",
-			"name": "Sammenligning af elaftaler",
-			"numberOfItems": 2,
-			"itemListOrder": "https://schema.org/ItemListOrderAscending",
-			"itemListElement": [
+			"@graph": [
 				{
-					"@type": "ListItem",
-					"position": 1,
-					"item": {
-						"@type": "Product",
-						"name": "DCC Energi Flex - Intro",
-						"brand": { "@type": "Brand", "name": "DCC Energi" },
-						"offers": {
-							"@type": "Offer",
-							"price": 5560,
-							"priceCurrency": "DKK",
-							"url": "https://tjekelpris.dk/elaftale/dcc-energi-flex-intro/"
-						}
-					}
+					"@type": "Article",
+					"author": { "@type": "Person", "name": "Peter Hellmuth" },
+					"reviewedBy": { "@type": "Person", "name": "Mette Sørensen", "jobTitle": "Energirådgiver" },
+					"dateModified": "2026-04-26",
+					"publisher": { "@type": "Organization", "name": "Tjekelpris" }
 				},
 				{
-					"@type": "ListItem",
-					"position": 2,
-					"item": {
-						"@type": "Product",
-						"name": "DCC Energi Flex - Intro",
-						"brand": { "@type": "Brand", "name": "DCC Energi" },
-						"offers": {
-							"@type": "Offer",
-							"price": 5560,
-							"priceCurrency": "DKK",
-							"url": "https://tjekelpris.dk/elaftale/dcc-energi-flex-intro/"
+					"@type": "ItemList",
+					"name": "Sammenligning af elaftaler",
+					"numberOfItems": 2,
+					"itemListOrder": "https://schema.org/ItemListOrderAscending",
+					"itemListElement": [
+						{
+							"@type": "ListItem",
+							"position": 1,
+							"item": {
+								"@type": "Product",
+								"name": "DCC Energi Flex - Intro",
+								"brand": { "@type": "Brand", "name": "DCC Energi" },
+								"offers": {
+									"@type": "Offer",
+									"price": 5560,
+									"priceCurrency": "DKK",
+									"url": "https://tjekelpris.dk/elaftale/dcc-energi-flex-intro/"
+								}
+							}
+						},
+						{
+							"@type": "ListItem",
+							"position": 2,
+							"item": {
+								"@type": "Product",
+								"name": "DCC Energi Flex - Intro",
+								"brand": { "@type": "Brand", "name": "DCC Energi" },
+								"offers": {
+									"@type": "Offer",
+									"price": 5560,
+									"priceCurrency": "DKK",
+									"url": "https://tjekelpris.dk/elaftale/dcc-energi-flex-intro/"
+								}
+							}
 						}
-					}
+					]
 				}
 			]
 		})}></script>
@@ -68,8 +79,15 @@ import '../styles/global.css';
 		</header>
 		<main>
 			<div>
-				<p class="last-updated">Opdateret <time datetime="2026-04-26">26/04/2026</time></p>
 				<h1>Sammenlign elpriser og find det billigste elselskab</h1>
+				<div class="byline">
+					<address class="byline-authors">
+						Skrevet af <a rel="author" href="#" class="byline-name">Peter Hellmuth</a> · Faktatjekket af <a rel="reviewer" href="#" class="byline-name">Mette Sørensen</a>, energirådgiver
+					</address>
+					<p class="byline-meta">
+						Sidst opdateret <time datetime="2026-04-26">26/04/2026</time> · Data fra Energinet · <a href="#" class="byline-link">Vores metode</a>
+					</p>
+				</div>
 				<div class="filters" role="group" aria-label="Filtrer elpriser">
 					<div class="filter-field">
 						<label for="postnummer">Postnummer</label>
@@ -304,6 +322,17 @@ import '../styles/global.css';
 					</li>
 				</ol>
 				<h2 class="faq-heading">Ofte stillede spørgsmål om elpriser</h2>
+				<details class="faq-details">
+					<summary>
+						<h3 class="faq-question">Hvilket elselskab er billigst?</h3>
+						<svg viewBox="0 0 24 24" aria-hidden="true">
+							<path d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"></path>
+						</svg>
+					</summary>
+					<div class="faq-answer">
+						<p>indtast tekst her.</p>
+					</div>
+				</details>
 			</div>
 		</main>
 		<footer></footer>
@@ -371,6 +400,14 @@ import '../styles/global.css';
 		gap: 1.5rem;
 	}
 
+	header nav a {
+		text-decoration: none;
+		color: #1a1a1a;
+		font-weight: 500;
+		line-height: calc(0.25rem * 6);
+		font-size: 14px;
+	}
+
 	header img {
 		height: 40px;
 		width: 140px;
@@ -381,7 +418,7 @@ import '../styles/global.css';
 	}
 
 	main {
-		padding: 0.75rem;
+		padding: 1.75rem 0.75rem;
 		background-color: #f8faf9;
 		border-top: 1px solid #e5e7eb;
 		border-bottom: 1px solid #e5e7eb;
@@ -393,11 +430,36 @@ import '../styles/global.css';
 	}
 
 	main h1 {
-		margin: 0 0 24px;
+		margin: 0 0 12px;
 		line-height: 1.4;
 		font-weight: 500;
 		font-size: clamp(1.375rem, 0.9063rem + 1.5vw, 1.75rem);
 		color: #1a1a1a;
+	}
+
+	.byline {
+		color: #6b7280;
+		font-size: 14px;
+		line-height: 1.5;
+		margin: 0 0 24px;
+	}
+
+	.byline-authors,
+	.byline-meta {
+		font-style: normal;
+		margin: 0;
+	}
+
+	.byline-name {
+		color: #1a1a1a;
+		text-decoration: none;
+		font-weight: 500;
+	}
+
+	.byline-link {
+		color: #1a1a1a;
+		text-decoration: none;
+		font-weight: 500;
 	}
 
 	.faq-heading {
@@ -406,6 +468,35 @@ import '../styles/global.css';
 		line-height: 1.4;
 		margin-top: 32px;
 		margin-bottom: 16px;
+	}
+
+	.faq-question {
+		font-size: clamp(1rem, 0.8438rem + 0.5vw, 1.125rem);
+		font-weight: 400;
+		line-height: 1.4;
+		margin: 0;
+	}
+
+	main .faq-details summary {
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.faq-answer {
+		padding: 0 16px;
+	}
+
+	@media (max-width: 640px) {
+		main .faq-details summary {
+			display: flex;
+			grid-template-columns: none;
+			grid-template-areas: none;
+		}
+
+		main .faq-details summary > svg {
+			grid-area: auto;
+			justify-self: auto;
+		}
 	}
 
 	.filters {
@@ -443,7 +534,7 @@ import '../styles/global.css';
 		flex: 1;
 		min-width: 0;
 		padding: 8px 12px;
-		border: 1px solid #d1d5db;
+		border: 1px solid #e5e7eb;
 		border-radius: 4px;
 		font: inherit;
 		font-size: 16px;
@@ -635,30 +726,4 @@ import '../styles/global.css';
 		padding-bottom: 24px;
 	}
 
-	.last-updated {
-		margin-bottom: 0;
-		font-size: 14px;
-	}
-
-	.last-updated::before {
-		content: "";
-		display: inline-block;
-		width: 8px;
-		height: 8px;
-		border-radius: 50%;
-		background-color: #e9f45c;
-		margin-right: 6px;
-		vertical-align: middle;
-		animation: pulse-subtle 2s infinite;
-		margin-top: -3px;
-	}
-
-	@keyframes pulse-subtle {
-		0% {
-			box-shadow: 0 0 0 0 rgba(233, 244, 92, 0.4);
-		}
-		100% {
-			box-shadow: 0 0 0 6px rgba(233, 244, 92, 0);
-		}
-	}
 </style>
